@@ -4,21 +4,23 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.github.odevfred.api_cadastro_beneficiarios.DTO.BeneficiariesDTO;
 import io.github.odevfred.api_cadastro_beneficiarios.model.Beneficiaries;
+import io.github.odevfred.api_cadastro_beneficiarios.model.Document;
 import io.github.odevfred.api_cadastro_beneficiarios.repository.BeneficiariesRepository;
+import io.github.odevfred.api_cadastro_beneficiarios.repository.DocumentRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BeneficiariesService {
-    private final BeneficiariesRepository beneficiariesRepository;
+    @Autowired
+    private BeneficiariesRepository beneficiariesRepository;
 
-    public BeneficiariesService(BeneficiariesRepository beneficiariesRepository) {
-        this.beneficiariesRepository = beneficiariesRepository;
-    }
-
+    @Autowired
+    private DocumentRepository documentRepository;
 
     public List<Beneficiaries> findBeneficiaries() {
         return beneficiariesRepository.findAll();
@@ -34,6 +36,11 @@ public class BeneficiariesService {
     public Beneficiaries createBeneficiaries(BeneficiariesDTO dto) {
         Beneficiaries entity = new Beneficiaries();
         BeanUtils.copyProperties(dto, entity);
+
+        if (entity.getDocuments() != null) {
+            dto.getDocuments().forEach(doc -> doc.setBeneficiary(entity));
+            entity.getDocuments().forEach(document -> ((Document) document).setBeneficiary(entity));
+        }
         return beneficiariesRepository.save(entity);
     }
 
@@ -52,4 +59,12 @@ public class BeneficiariesService {
 
         beneficiariesRepository.deleteById(id);
     }
+
+    // Pegar documentos do beneficiários
+    public List<Document> listDocuments(UUID id) {
+    if (!beneficiariesRepository.existsById(id)) {
+        throw new RuntimeException("Beneficiário não encontrado com o ID: " + id);
+    }
+    return documentRepository.findByBeneficiaryId(id);
+}
 }

@@ -1,5 +1,8 @@
 package io.github.odevfred.api_cadastro_beneficiarios.DTO;
 
+import java.util.List;
+
+import io.github.odevfred.api_cadastro_beneficiarios.model.Document;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,9 +27,6 @@ public class BeneficiariesDTO {
     @NotBlank(message = "O telefone não pode estar vazio ou nulo")
     private String phone;
 
-    @NotBlank(message = "O CPF não pode estar vazio ou nulo")
-    private String cpf;
-
     @NotBlank(message = "O endereço não pode estar vazio ou nulo")
     private String street;
 
@@ -48,4 +48,5 @@ public class BeneficiariesDTO {
     @NotBlank(message = "O plano não pode estar vazio ou nulo")
     private String plan;
 
+    private List<Document> documents;
 }
