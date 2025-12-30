@@ -76,4 +76,4 @@ Para executar a suíte de testes unitários e de integração:
 
 ---
 
-**Desenvolvido por [oDevFred**](https://odevfred.codes/)
+**Desenvolvido por [oDevFred**](https://odevfred.codes/)**
